@@ -12,6 +12,8 @@ from agents.stanley_druckenmiller import stanley_druckenmiller_agent
 from agents.technicals import technical_analyst_agent
 from agents.valuation import valuation_agent
 from agents.warren_buffett import warren_buffett_agent
+from agents.private_equity import private_equity_analyst_agent
+from agents.venture_capital import venture_capital_analyst_agent
 
 # Define analyst configuration - single source of truth
 ANALYST_CONFIG = {
@@ -74,6 +76,16 @@ ANALYST_CONFIG = {
         "display_name": "Valuation Analyst",
         "agent_func": valuation_agent,
         "order": 11,
+    },
+    "private_equity_analyst": {
+        "display_name": "Private Equity Analyst",
+        "agent_func": private_equity_analyst_agent,
+        "order": 12,
+    },
+    "venture_capital_analyst": {
+        "display_name": "Venture Capital Analyst",
+        "agent_func": venture_capital_analyst_agent,
+        "order": 13,
     },
 }
 
