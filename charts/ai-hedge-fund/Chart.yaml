@@ -1,0 +1,13 @@
+apiVersion: v2
+name: ai-hedge-fund
+description: A Helm chart for AI Hedge Fund application
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - ai
+  - finance
+  - trading
+maintainers:
+  - name: AI Hedge Fund Team
+    email: team@example.com
