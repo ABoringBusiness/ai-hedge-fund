@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ai-hedge-fund:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./.env:/app/.env:ro
+    command: ["--tickers", "AAPL,MSFT,GOOGL", "--show-reasoning"]
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true

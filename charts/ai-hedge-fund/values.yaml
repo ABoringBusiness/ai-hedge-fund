@@ -1,0 +1,63 @@
+replicaCount: 1
+
+image:
+  repository: ai-hedge-fund
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Application specific configuration
+application:
+  tickers: "AAPL,MSFT,GOOGL"
+  initialCash: 100000.0
+  marginRequirement: 0.0
+  showReasoning: true
+  showAgentGraph: false
+
+# Environment variables to be passed to the application
+env:
+  # Add your environment variables here
+  # OPENAI_API_KEY: ""
+  # ANTHROPIC_API_KEY: ""
+
+# Secret containing API keys
+secrets:
+  enabled: true
+  name: ai-hedge-fund-secrets
+  # If you want to create the secret via Helm
+  create: true
+  data: {}
+    # OPENAI_API_KEY: ""
+    # ANTHROPIC_API_KEY: ""
