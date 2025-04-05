@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ai-hedge-fund
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ABoringBusiness/ai-hedge-fund.git
+    targetRevision: HEAD
+    path: charts/ai-hedge-fund
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: image.repository
+          value: ai-hedge-fund
+        - name: image.tag
+          value: latest
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ai-hedge-fund
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
