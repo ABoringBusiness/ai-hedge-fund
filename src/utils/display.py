@@ -4,6 +4,12 @@ from .analysts import ANALYST_ORDER
 import os
 import json
 
+# Import real estate analysts if available
+try:
+    from .real_estate_analysts import REAL_ESTATE_ANALYST_ORDER
+except ImportError:
+    REAL_ESTATE_ANALYST_ORDER = []
+
 
 def sort_agent_signals(signals):
     """Sort agent signals in a consistent order."""
@@ -302,6 +308,66 @@ def print_backtest_results(table_rows: list) -> None:
 
     # Add vertical spacing
     print("\n" * 4)
+
+
+def print_real_estate_output(decisions, analyst_signals):
+    """Print the real estate investment decisions in a nice format."""
+    print(f"\n{Fore.GREEN}=== Real Estate Investment Decisions ==={Style.RESET_ALL}")
+    
+    # Convert decisions to a list of dictionaries if it's not already
+    if isinstance(decisions, str):
+        try:
+            decisions = json.loads(decisions)
+        except json.JSONDecodeError:
+            print(f"{Fore.RED}Error parsing decisions: {decisions}{Style.RESET_ALL}")
+            return
+    
+    # Print the decisions
+    if isinstance(decisions, dict):
+        for property_id, decision in decisions.items():
+            signal = decision.get("signal", "unknown")
+            confidence = decision.get("confidence", 0)
+            reasoning = decision.get("reasoning", "No reasoning provided")
+            
+            color = Fore.GREEN if signal == "buy" else Fore.RED if signal == "pass" else Fore.YELLOW
+            print(f"\n{color}Property ID: {property_id}{Style.RESET_ALL}")
+            print(f"{color}Signal: {signal.upper()}{Style.RESET_ALL}")
+            print(f"{color}Confidence: {confidence:.2f}%{Style.RESET_ALL}")
+            print(f"Reasoning: {reasoning}")
+    else:
+        print(f"{Fore.RED}Invalid decisions format: {decisions}{Style.RESET_ALL}")
+    
+    # Print the analyst signals
+    print(f"\n{Fore.BLUE}=== Real Estate Expert Signals ==={Style.RESET_ALL}")
+    
+    # Group signals by property
+    property_signals = {}
+    for analyst, signals in analyst_signals.items():
+        for property_id, signal in signals.items():
+            if property_id not in property_signals:
+                property_signals[property_id] = []
+            property_signals[property_id].append({
+                "analyst": analyst.replace("_agent", "").replace("_", " ").title(),
+                "signal": signal.get("signal", "unknown"),
+                "confidence": signal.get("confidence", 0),
+            })
+    
+    # Print the signals for each property
+    for property_id, signals in property_signals.items():
+        print(f"\n{Fore.CYAN}Property ID: {property_id}{Style.RESET_ALL}")
+        
+        # Create a table of signals
+        table = []
+        for signal in signals:
+            color = Fore.GREEN if signal["signal"] == "buy" else Fore.RED if signal["signal"] == "pass" else Fore.YELLOW
+            table.append([
+                signal["analyst"],
+                f"{color}{signal['signal'].upper()}{Style.RESET_ALL}",
+                f"{signal['confidence']:.2f}%",
+            ])
+        
+        # Print the table
+        print(tabulate(table, headers=["Expert", "Signal", "Confidence"], tablefmt="grid"))
 
 
 def format_backtest_row(
